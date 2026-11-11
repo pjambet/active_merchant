@@ -183,6 +183,21 @@ class QuickBooksTest < Test::Unit::TestCase
     assert_equal @oauth_1_gateway.scrub(pre_scrubbed_small_json), post_scrubbed_small_json
   end
 
+  def test_scrub_numeric_cvc
+    [123, 1234].each do |cvc|
+      ['{"cvc":%d,"amount":100,"postalCode":12345}', '{"cvc" : %d, "amount":100, "postalCode":12345}'].each do |template|
+        json = format(template, cvc)
+        filtered_json = json.sub(cvc.to_s, '[FILTERED]')
+
+        [[json, filtered_json], [json.dump, filtered_json.dump]].each do |transcript, expected|
+          [@oauth_1_gateway, @oauth_2_gateway].each do |gateway|
+            assert_equal expected, gateway.scrub(transcript)
+          end
+        end
+      end
+    end
+  end
+
   def test_default_context
     [@oauth_1_gateway, @oauth_2_gateway].each do |gateway|
       stub_comms(gateway) do

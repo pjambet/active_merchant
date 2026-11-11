@@ -139,6 +139,7 @@ module ActiveMerchant # :nodoc:
           gsub(%r((oauth_token=\")\w+), '\1[FILTERED]').
           gsub(%r((number\\\":\\\")\d+), '\1[FILTERED]').
           gsub(%r((cvc\\\":\\\")\d+), '\1[FILTERED]').
+          gsub(%r(("cvc\\?"\s*:\s*)\d+), '\1[FILTERED]').
           gsub(%r((Authorization: Basic )\w+), '\1[FILTERED]').
           gsub(%r((access_token\\?":\\?")[\w\-\.]+)i, '\1[FILTERED]').
           gsub(%r((refresh_token\\?":\\?")\w+), '\1[FILTERED]').
